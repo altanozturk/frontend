@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signUp } from "./api";
 
 export function SignUp() {
@@ -9,10 +9,17 @@ export function SignUp() {
   const [passwordRepeat, setPasswordRepeat] = useState();
   const [apiProgress, setApiProgress] = useState(false); // submit butonuna ikinci kez tıklanmaması için
   const [successMessage, setSuccessMessage] = useState();
+  const [errors, setErrors] = useState({}); // obje tutuyor
+  const [generalError, setGeneralError] = useState();
+
+  useEffect(() => {
+    setErrors({});
+  }, [username]); // username her değiştiğinde çalışıyor
 
   const onSubmit = async (event) => {
     event.preventDefault();
     setSuccessMessage();
+    setGeneralError();
     setApiProgress(true); // submit edildiği anda true verip buton disabled koşulu fail almalı
 
     try {
@@ -20,10 +27,17 @@ export function SignUp() {
         username: username,
         email: email,
         password: password,
-      })
+      });
       setSuccessMessage(response.data.message);
-    } catch {
-
+    } catch (axiosError) {
+      if (
+        axiosError.response?.data &&
+        axiosError.response.data.status === 400
+      ) {
+        setErrors(axiosError.response.data.validationErrors);
+      } else {
+        setGeneralError("Unexpected error occured, please try again");
+      }
     } finally {
       setApiProgress(false);
     }
@@ -43,9 +57,12 @@ export function SignUp() {
               </label>
               <input
                 id="username"
-                className="form-control"
+                className={
+                  errors.username ? "form-control is-invalid" : "form-control"
+                }
                 onChange={(event) => setUsername(event.target.value)}
               ></input>
+              <div className="invalid-feedback">{errors.username}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
@@ -82,6 +99,10 @@ export function SignUp() {
 
             {successMessage && (
               <div className="alert alert-success">{successMessage}</div>
+            )}
+
+            {generalError && (
+              <div className="alert alert-danger">{generalError}</div>
             )}
 
             <div className="text-center">
