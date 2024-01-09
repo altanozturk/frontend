@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { signUp } from "./api";
+import { Input } from "./components/Input";
 
 export function SignUp() {
   const [username, setUsername] = useState();
@@ -12,9 +13,11 @@ export function SignUp() {
   const [errors, setErrors] = useState({}); // obje tutuyor
   const [generalError, setGeneralError] = useState();
 
+  // username her değiştiğinde çalışıyor
+  // username her değiştiğinde setErrors objesi boşaltılıyor
   useEffect(() => {
     setErrors({});
-  }, [username]); // username her değiştiğinde çalışıyor
+  }, [username]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -51,7 +54,13 @@ export function SignUp() {
             <h1>Sign Up</h1>
           </div>
           <div className="card-body">
-            <div className="mb-3">
+            <Input
+              id="username"
+              label="Username"
+              error={errors.username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+            {/* <div className="mb-3">
               <label htmlFor="username" className="form-label">
                 Username{" "}
               </label>
@@ -63,16 +72,19 @@ export function SignUp() {
                 onChange={(event) => setUsername(event.target.value)}
               ></input>
               <div className="invalid-feedback">{errors.username}</div>
-            </div>
+            </div> */}
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 E-mail{" "}
               </label>
               <input
                 id="email"
-                className="form-control"
+                className={
+                  errors.email ? "form-control is-invalid" : "form-control"
+                }
                 onChange={(event) => setEmail(event.target.value)}
               ></input>
+              <div className="invalid-feedback">{errors.email}</div>
             </div>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
