@@ -1,6 +1,6 @@
 export function Input(props) {
 
-    const { id, label, error, onChange } = props;
+    const { id, label, error, onChange, type } = props;
 
 
 
@@ -13,6 +13,7 @@ export function Input(props) {
         id={id}
         className={error ? "form-control is-invalid" : "form-control"}
         onChange={onChange}
+        type={type}
       ></input>
       <div className="invalid-feedback">{error}</div>
     </div>

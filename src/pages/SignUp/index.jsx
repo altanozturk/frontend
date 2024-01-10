@@ -14,10 +14,36 @@ export function SignUp() {
   const [generalError, setGeneralError] = useState();
 
   // username her değiştiğinde çalışıyor
-  // username her değiştiğinde setErrors objesi boşaltılıyor
+  // username her değiştiğinde setErrors objesindeki username undefined oluyor
+  // ...lastErrors yapısı ile fonskiyonun içerisine giren değer kopyalanır ve username i değiştirilir
   useEffect(() => {
-    setErrors({});
-  }, [username]);
+    setErrors(function (lastErrors) {
+      return {
+        ...lastErrors,
+        username: undefined
+      }
+    });
+  }, [username])
+
+  // email her değiştiğinde çalışıyor
+  // email her değiştiğinde setErrors objesindeki email undefined oluyor
+  useEffect(() => {
+    setErrors(function (lastErrors) {
+      return {
+        ...lastErrors,
+        email: undefined
+      }
+    });
+  }, [email])
+
+  useEffect(() => {
+    setErrors(function (lastErrors) {
+      return {
+        ...lastErrors,
+        password: undefined
+      }
+    });
+  }, [password])
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -54,49 +80,20 @@ export function SignUp() {
             <h1>Sign Up</h1>
           </div>
           <div className="card-body">
+
             <Input
-              id="username"
-              label="Username"
-              error={errors.username}
-              onChange={(event) => setUsername(event.target.value)}
+              id="username" label="Username" error={errors.username} onChange={(event) => setUsername(event.target.value)}
             />
-            {/* <div className="mb-3">
-              <label htmlFor="username" className="form-label">
-                Username{" "}
-              </label>
-              <input
-                id="username"
-                className={
-                  errors.username ? "form-control is-invalid" : "form-control"
-                }
-                onChange={(event) => setUsername(event.target.value)}
-              ></input>
-              <div className="invalid-feedback">{errors.username}</div>
-            </div> */}
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                E-mail{" "}
-              </label>
-              <input
-                id="email"
-                className={
-                  errors.email ? "form-control is-invalid" : "form-control"
-                }
-                onChange={(event) => setEmail(event.target.value)}
-              ></input>
-              <div className="invalid-feedback">{errors.email}</div>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password{" "}
-              </label>
-              <input
-                id="password"
-                type="password"
-                className="form-control"
-                onChange={(event) => setPassword(event.target.value)}
-              ></input>
-            </div>
+
+            <Input
+              id="email" label="E-mail" error={errors.email} onChange={(event) => setEmail(event.target.value)}
+            />
+
+            <Input
+              id="password" label="Password" error={errors.password} onChange={(event) => setPassword(event.target.value)} type="password"
+            />
+
+
             <div className="mb-3">
               <label htmlFor="passwordRepeat" className="form-label">
                 Password Repeat{" "}
