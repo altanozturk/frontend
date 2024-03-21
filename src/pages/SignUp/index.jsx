@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { signUp } from "./api";
 import { Input } from "./components/Input";
 
@@ -15,7 +14,7 @@ export function SignUp() {
 
   // username her değiştiğinde çalışıyor
   // username her değiştiğinde setErrors objesindeki username undefined oluyor
-  // ...lastErrors yapısı ile fonskiyonun içerisine giren değer kopyalanır ve username i değiştirilir
+  // ...lastErrors yapısı ile fonksiyonun içerisine giren değer kopyalanır ve username i değiştirilir
   useEffect(() => {
     setErrors(function (lastErrors) {
       return {
@@ -72,6 +71,19 @@ export function SignUp() {
     }
   };
 
+  const passwordRepeatError = useMemo(() => {
+
+    if(password && password !== passwordRepeat){
+      console.log("always run?")
+      return 'Password mismatch';
+    }
+
+    return '';
+
+  }, [password, passwordRepeat]);
+  
+
+
   return (
     <div className="container">
       <div className="col-lg-6 offset-lg-3 col-sm-8 offset-sm-2">
@@ -93,18 +105,9 @@ export function SignUp() {
               id="password" label="Password" error={errors.password} onChange={(event) => setPassword(event.target.value)} type="password"
             />
 
-
-            <div className="mb-3">
-              <label htmlFor="passwordRepeat" className="form-label">
-                Password Repeat{" "}
-              </label>
-              <input
-                id="passwordRepeat"
-                type="password"
-                className="form-control"
-                onChange={(event) => setPasswordRepeat(event.target.value)}
-              ></input>
-            </div>
+            <Input
+              id="passwordRepeat" label="Password Repeat" error={passwordRepeatError} onChange={(event) => setPasswordRepeat(event.target.value)} type="password"
+            />
 
             {successMessage && (
               <div className="alert alert-success">{successMessage}</div>
